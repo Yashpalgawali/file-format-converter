@@ -25,8 +25,6 @@ public class ExcelToPdfController {
 	@PostMapping(value = "/convert", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<byte[]> convertExcelToPdf(HttpServletRequest request,
 	        @RequestParam("file") MultipartFile file) {
-
-		System.err.println("Content type is "+request.getContentType());
 	    try {
 
 	        if (file.isEmpty()) {
@@ -34,10 +32,10 @@ public class ExcelToPdfController {
 	        }
 
 	        byte[] pdfBytes = exceltopdfserv.convertExcelToPdf(file.getInputStream());
-
+	        
 	        HttpHeaders headers = new HttpHeaders();
 	        headers.setContentType(MediaType.APPLICATION_PDF);
-	        headers.setContentDispositionFormData("attachment", "converted_report.pdf");
+	        headers.setContentDispositionFormData("attachment", file.getOriginalFilename()+".pdf");
 
 	        return new ResponseEntity<>(pdfBytes, headers, HttpStatus.OK);
 
