@@ -1,0 +1,9 @@
+server:
+  port: 8787
+spring:
+  application:
+    name: file-format-converter
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 100MB     
