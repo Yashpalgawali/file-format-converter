@@ -358,13 +358,54 @@ public class ExcelToPdfServImpl implements IExcelToPdfService {
 	    }
 
 	    private String getCellValue(Cell cell) {
+ 
+	    	 if (cell == null)
+	    	        return "";
 
-	        if (cell == null)
-	            return "";
+	    	    String value = formatter.formatCellValue(cell);
 
-	        return formatter.formatCellValue(cell);
+	    	    if (value == null)
+	    	        return "";
+
+	    	    value = value.replace("\r", "");
+	    	    value = value.replace("\n", " ");
+
+	    	    return wrapText(value, 18);
 	    }
 
+	    private String wrapText(String text, int maxCharactersPerLine) {
+
+	        if (text == null || text.isBlank())
+	            return "";
+
+	        StringBuilder result = new StringBuilder();
+
+	        String[] words = text.trim().split("\\s+");
+
+	        int currentLength = 0;
+
+	        for (String word : words) {
+
+	            if (currentLength == 0) {
+	                result.append(word);
+	                currentLength = word.length();
+	            }
+	            else if (currentLength + word.length() + 1 <= maxCharactersPerLine) {
+
+	                result.append(" ").append(word);
+	                currentLength += word.length() + 1;
+	            }
+	            else {
+
+	                result.append("\n");
+	                result.append(word);
+	                currentLength = word.length();
+	            }
+	        }
+
+	        return result.toString();
+	    }
+	    
 	    private int getHorizontalAlignment(Cell cell) {
 
 	        if (cell == null)
